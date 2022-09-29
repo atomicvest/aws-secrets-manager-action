@@ -1,14 +1,16 @@
 name: 'AWS Secrets Manager Action'
 author: 'Abhilash Kishore'
-description: 'Use secrets from AWS Secrets Manager as environment variables in your GitHub Actions workflow'
+description: 'Use secret from AWS Secrets Manager as environment variables in your GitHub Actions workflow'
 inputs:
-  secrets:
-    description: 'List of secret names you want to fetch secret values for'
+  secret_name:
+    description: 'Secret name you want to import'
     required: true
-  parse-json:
-    description: 'If true and secret values are stringified JSON objects, they will be parsed and flattened. Its key value pairs will become individual secrets'
-    required: false
-    default: 'false'
+  secret_version:
+    description: 'Secret version you want to import'
+    required: true
+  env_vars:
+    description: 'Environmental variables to export'
+    required: true
   disable-warnings:
     description: 'If true, disable annotation warnings in the GitHub Actions output.'
     required: false
