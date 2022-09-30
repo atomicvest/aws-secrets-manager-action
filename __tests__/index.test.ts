@@ -11,7 +11,7 @@ const secretsManagerClient = new SecretsManager({})
 
 test('Fetch Secret Value: Valid Secret Name', () => {
   expect.assertions(2)
-  return getSecretValue(secretsManagerClient, 'my_secret_1', "version_1").then(secretValue => {
+  return getSecretValue(secretsManagerClient, 'my_secret_1', ).then(secretValue => {
     expect(Object.keys(secretValue)).toContain('SecretString')
     expect(secretValue['SecretString']).toEqual('plain_text')
   })
@@ -19,7 +19,7 @@ test('Fetch Secret Value: Valid Secret Name', () => {
 
 test('Fetch Secret Value: Invalid Secret Name', () => {
   expect.assertions(1)
-  return getSecretValue(secretsManagerClient, 'foobarbaz', "version_1").catch(err => {
+  return getSecretValue(secretsManagerClient, 'foobarbaz', ).catch(err => {
     expect(err).not.toBeNull()
   })
 })
@@ -34,22 +34,15 @@ test('List Secrets', () => {
 
 test('Get Secret Value Map: not JSON value', () => {
   expect.assertions(1)
-  return getSecretValueMap(secretsManagerClient, 'my_secret_1','version_1').catch(err => {
+  return getSecretValueMap(secretsManagerClient, 'my_secret_1').catch(err => {
     expect(err).not.toBeNull()
   })
 })
 
 test('Get Secret Value Map: JSON string value', () => {
   expect.assertions(1)
-  return getSecretValueMap(secretsManagerClient, 'my_secret_2','version_1').then(secretValueMap => {
+  return getSecretValueMap(secretsManagerClient, 'my_secret_2').then(secretValueMap => {
     expect(secretValueMap).toMatchObject({ 'foo': 'bar' })
-  })
-})
-
-test('Get Secret Value Map: Invalid version', () => {
-  expect.assertions(1)
-  return getSecretValueMap(secretsManagerClient, "my_secret_1", "invalid_version").catch(err => {
-    expect(err).not.toBeNull()
   })
 })
 

@@ -6,10 +6,10 @@ import { isJSONObjectString, injectSecretValueMapToEnvironment } from './utils'
 
 const getSecretsManagerClient = (config: Record<string, any>): SecretsManager => new SecretsManager(config)
 
-const getSecretValue = (secretsManagerClient: SecretsManager, secretName: string, secretVersion: string):
+const getSecretValue = (secretsManagerClient: SecretsManager, secretName: string, ):
   Promise<PromiseResult<GetSecretValueResponse, AWSError>> => {
-  core.debug(`Fetching '${secretName}' '${secretVersion}'`)
-  return secretsManagerClient.getSecretValue({ SecretId: secretName, VersionId: secretVersion}).promise()
+  core.debug(`Fetching '${secretName}'`)
+  return secretsManagerClient.getSecretValue({ SecretId: secretName}).promise()
 }
 
 const listSecretsPaginated = (secretsManagerClient, nextToken) =>
@@ -44,9 +44,9 @@ const listSecrets = (secretsManagerClient: SecretsManager): Promise<Array<string
   })
 }
 
-const getSecretValueMap = (secretsManagerClient: SecretsManager, secretName: string, secretVersion: string) => {
+const getSecretValueMap = (secretsManagerClient: SecretsManager, secretName: string) => {
   return new Promise((resolve, reject) => {
-    getSecretValue(secretsManagerClient, secretName, secretVersion)
+    getSecretValue(secretsManagerClient, secretName)
       .then(data => {
         let secretValue
         // Decrypts secret using the associated KMS CMK.
@@ -102,10 +102,9 @@ const getSecretValueMap = (secretsManagerClient: SecretsManager, secretName: str
 }
 
 const fetchAndInject = (secretsManagerClient: SecretsManager,
-  secretName: string, secretVersion: string,
-  envVars: string[]): void => {
+  secretName: string, envVars: string[]): void => {
   core.debug(`Will fetch secret: ${secretName}`)
-  getSecretValueMap(secretsManagerClient, secretName, secretVersion)
+  getSecretValueMap(secretsManagerClient, secretName)
     .then(map => {
       const filter = {}
       envVars.forEach((envVar) => {

@@ -5,9 +5,6 @@ inputs:
   secret_name:
     description: 'Secret name you want to import'
     required: true
-  secret_version:
-    description: 'Secret version you want to import'
-    required: true
   env_vars:
     description: 'Environmental variables to export'
     required: true
